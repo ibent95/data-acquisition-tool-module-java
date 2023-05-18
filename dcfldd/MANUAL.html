@@ -1,0 +1,264 @@
+Content-type: text/html
+
+<HTML><HEAD><TITLE>Manpage of DCFLDD</TITLE>
+</HEAD><BODY>
+<H1>DCFLDD</H1>
+Section: User Commands (1)<BR>Updated: February 2006<BR><A HREF="#index">Index</A>
+<A HREF="http://localhost/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+dcfldd - manual page for dcfldd (dcfldd) 1.3.4
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<B>dcfldd</B>
+
+[<I>OPTION</I>]...
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION</H2>
+
+Copy a file, converting and formatting according to the options.
+<DL COMPACT>
+<DT>bs=BYTES<DD>
+force ibs=BYTES and obs=BYTES
+<DT>cbs=BYTES<DD>
+convert BYTES bytes at a time
+<DT>conv=KEYWORDS<DD>
+convert the file as per the comma separated keyword list
+<DT>count=BLOCKS<DD>
+copy only BLOCKS input blocks
+<DT>ibs=BYTES<DD>
+read BYTES bytes at a time
+<DT>if=FILE<DD>
+read from FILE instead of stdin
+<DT>obs=BYTES<DD>
+write BYTES bytes at a time
+<DT>of=FILE<DD>
+write to FILE instead of stdout
+<DT><DD>
+NOTE: of=FILE may be used several times to write
+<DT><DD>
+output to multiple files simultaneously
+<DT>of:=COMMAND<DD>
+exec and write output to process COMMAND
+<DT>seek=BLOCKS<DD>
+skip BLOCKS obs-sized blocks at start of output
+<DT>skip=BLOCKS<DD>
+skip BLOCKS ibs-sized blocks at start of input
+<DT>pattern=HEX<DD>
+use the specified binary pattern as input
+<DT>textpattern=TEXT<DD>
+use repeating TEXT as input
+<DT>errlog=FILE<DD>
+send error messages to FILE as well as stderr
+<DT>hashwindow=BYTES<DD>
+perform a hash on every BYTES amount of data
+<DT>hash=NAME<DD>
+either md5, sha1, sha256, sha384 or sha512
+<DT><DD>
+default algorithm is md5. To select multiple
+algorithms to run simultaneously enter the names
+in a comma separated list
+<DT>hashlog=FILE<DD>
+send MD5 hash output to FILE instead of stderr
+<DT><DD>
+if you are using multiple hash algorithms you
+can send each to a seperate file using the
+convention ALGORITHMlog=FILE, for example
+md5log=FILE1, sha1log=FILE2, etc.
+<DT>hashlog:=COMMAND<DD>
+exec and write hashlog to process COMMAND
+<DT><DD>
+ALGORITHMlog:=COMMAND also works in the same fashion
+<DT>hashconv=[before|after]<DD>
+perform the hashing before or after the conversions
+<DT>hashformat=FORMAT<DD>
+display each hashwindow according to FORMAT
+<DT><DD>
+the hash format mini-language is described below
+<DT>totalhashformat=FORMAT<DD>
+display the total hash value according to FORMAT
+<DT>status=[on|off]<DD>
+display a continual status message on stderr
+<DT><DD>
+default state is &quot;on&quot;
+<DT>statusinterval=N<DD>
+update the status message every N blocks
+<DT><DD>
+default value is 256
+<DT>sizeprobe=[if|of]<DD>
+determine the size of the input or output file
+<DT><DD>
+for use with status messages. (this option
+gives you a percentage indicator)
+WARNING: do not use this option against a
+<DT><DD>
+tape device.
+<DT>split=BYTES<DD>
+write every BYTES amount of data to a new file
+<DT><DD>
+This operation applies to any of=FILE that follows
+<DT>splitformat=TEXT<DD>
+the file extension format for split operation.
+<DT><DD>
+you may use any number of 'a' or 'n' in any combo
+the default format is &quot;nnn&quot;
+NOTE: The split and splitformat options take effect
+<DT><DD>
+only for output files specified AFTER these
+options appear in the command line.  Likewise,
+you may specify these several times for
+for different output files within the same
+command line. you may use as many digits in
+any combination you would like.
+(e.g. &quot;anaannnaana&quot; would be valid, but
+quite insane)
+<DT>vf=FILE<DD>
+verify that FILE matches the specified input
+<DT>verifylog=FILE<DD>
+send verify results to FILE instead of stderr
+<DT>verifylog:=COMMAND<DD>
+exec and write verify results to process COMMAND
+<DT><B>--help</B><DD>
+display this help and exit
+<DT><B>--version</B><DD>
+output version information and exit
+</DL>
+<P>
+
+The structure of of FORMAT may contain any valid text and special variables.
+The built-in variables are used the following format: #variable_name#
+To pass FORMAT strings to the program from a command line, it may be
+necessary to surround your FORMAT strings with &quot;quotes.&quot;
+The built-in variables are listed below:
+<DL COMPACT>
+<DT>window_start<DD>
+The beginning byte offset of the hashwindow
+<DT>window_end<DD>
+The ending byte offset of the hashwindow
+<DT>block_start<DD>
+The beginning block (by input blocksize) of the window
+<DT>block_end<DD>
+The ending block (by input blocksize) of the hash window
+<DT>hash<DD>
+The hash value
+<DT>algorithm<DD>
+The name of the hash algorithm
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H3>For example, the default FORMAT for hashformat and totalhashformat are:</H3>
+
+<DL COMPACT>
+<DT><DD>
+hashformat=&quot;#window_start# - #window_end#: #hash#&quot;
+totalhashformat=&quot;Total (#algorithm#): #hash#&quot;
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H3>The FORMAT structure accepts the following escape codes:</H3>
+
+<DL COMPACT>
+<DT>\n<DD>
+Newline
+<DT>\t<DD>
+Tab
+<DT>\r<DD>
+Carriage return
+<DT>\\<DD>
+Insert the '\' character
+<DT>##<DD>
+Insert the '#' character as text, not a variable
+</DL>
+<P>
+
+BLOCKS and BYTES may be followed by the following multiplicative suffixes:
+xM M, c 1, w 2, b 512, kD 1000, k 1024, MD 1,000,000, M 1,048,576,
+GD 1,000,000,000, G 1,073,741,824, and so on for T, P, E, Z, Y.
+Each KEYWORD may be:
+<DL COMPACT>
+<DT>ascii<DD>
+from EBCDIC to ASCII
+<DT>ebcdic<DD>
+from ASCII to EBCDIC
+<DT>ibm<DD>
+from ASCII to alternated EBCDIC
+<DT>block<DD>
+pad newline-terminated records with spaces to cbs-size
+<DT>unblock<DD>
+replace trailing spaces in cbs-size records with newline
+<DT>lcase<DD>
+change upper case to lower case
+<DT>notrunc<DD>
+do not truncate the output file
+<DT>ucase<DD>
+change lower case to upper case
+<DT>swab<DD>
+swap every pair of input bytes
+<DT>noerror<DD>
+continue after read errors
+<DT>sync<DD>
+pad every input block with NULs to ibs-size; when used
+with block or unblock, pad with spaces rather than NULs
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>AUTHOR</H2>
+
+Written by: dcfldd by Nicholas Harbour, GNU dd by Paul Rubin, David MacKenzie and Stuart Kemp.
+<A NAME="lbAH">&nbsp;</A>
+<H2>REPORTING BUGS</H2>
+
+Report bugs to &lt;<A HREF="mailto:nicholasharbour@yahoo.com">nicholasharbour@yahoo.com</A>&gt;.
+<A NAME="lbAI">&nbsp;</A>
+<H2>COPYRIGHT</H2>
+
+Copyright &#169; 1985-2006 Free Software Foundation, Inc.
+<BR>
+
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+<A NAME="lbAJ">&nbsp;</A>
+<H2>SEE ALSO</H2>
+
+The full documentation for
+<B>dcfldd</B>
+
+is maintained as a Texinfo manual.  If the
+<B>info</B>
+
+and
+<B>dcfldd</B>
+
+programs are properly installed at your site, the command
+<DL COMPACT>
+<DT><DD>
+<B>info dcfldd</B>
+
+</DL>
+<P>
+
+should give you access to the complete manual.
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION</A><DD>
+<DL>
+<DT><A HREF="#lbAE">For example, the default FORMAT for hashformat and totalhashformat are:</A><DD>
+<DT><A HREF="#lbAF">The FORMAT structure accepts the following escape codes:</A><DD>
+</DL>
+<DT><A HREF="#lbAG">AUTHOR</A><DD>
+<DT><A HREF="#lbAH">REPORTING BUGS</A><DD>
+<DT><A HREF="#lbAI">COPYRIGHT</A><DD>
+<DT><A HREF="#lbAJ">SEE ALSO</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="http://localhost/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 17:01:33 GMT, February 12, 2006
+</BODY>
+</HTML>
