@@ -6,19 +6,43 @@ package com.data.acquisition.wizard;
 
 import com.data.acquisition.DataAcquisitionAction;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 
 public final class DataAcquisitionVisualPanel1 extends JPanel {
 
     JFileChooser chooser;
     String chooserTitle = "Pilih sumber";
 
+    private static JFrame jFrame;
+    private static JPanel jPanel;
+    private static JProgressBar jProgressBar;  
+
     /**
      * Creates new form DataAcquisitionVisualPanel1
      */
     public DataAcquisitionVisualPanel1() {
         initComponents();
+        this.initialProgressBar();
+        jFrame.setVisible(true);
+    }
+    
+    private void initialProgressBar() {
+        jFrame          = new JFrame(" Progress Bar ");
+        jPanel          = new JPanel();
+        jProgressBar    = new JProgressBar(0, 1);
+
+        jProgressBar.setValue(0);
+        jProgressBar.setIndeterminate(true);
+        jPanel.setSize(300, 200);
+        jPanel.add(jProgressBar);
+        jFrame.add(jPanel);
+        jFrame.setSize(300, 200);
+        jFrame.setResizable(false);
+        jFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        jFrame.setUndecorated(true);
     }
 
     @Override
