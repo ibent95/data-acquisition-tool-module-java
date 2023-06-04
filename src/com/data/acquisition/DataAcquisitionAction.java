@@ -4,6 +4,7 @@
  */
 package com.data.acquisition;
 
+import com.data.acquisition.progressBar.ProgressBarFrame;
 import com.data.acquisition.wizard.DataAcquisitionWizardAction;
 import com.data.acquisition.wizard.DataAcquisitionWizardPanel1;
 import com.data.acquisition.wizard.DataAcquisitionWizardPanel2;
@@ -58,23 +59,18 @@ public final class DataAcquisitionAction implements ActionListener {
     
     private static JFrame jFrame;
     private static JPanel jPanel;
-    private static JProgressBar jProgressBar;  
+    private static JProgressBar jProgressBar;
+    public static ProgressBarFrame jProgressBarFrame;
     
     private DataAcquisitionWizardAction wizardListener;
     
-    public void constructor() {
-        this.wizardListener = new DataAcquisitionWizardAction();
+    public void constructor(DataAcquisitionWizardAction dawa, ProgressBarFrame pbf) {
+        this.wizardListener = dawa;
+        this.jProgressBarFrame = pbf;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // JOptionPane.showMessageDialog(null, "Hallo", "Test", JOptionPane.INFORMATION_MESSAGE);
-        
-        // this.wizardListener.actionPerformed(e);
-        // String gList = this.getMountedDriveList();
-        
-//        System.out.println("Results... " + gList);
-
         List<WizardDescriptor.Panel<WizardDescriptor>> panels = new ArrayList<WizardDescriptor.Panel<WizardDescriptor>>();
         panels.add(new DataAcquisitionWizardPanel1());
         panels.add(new DataAcquisitionWizardPanel2());
@@ -105,6 +101,8 @@ public final class DataAcquisitionAction implements ActionListener {
         wiz.setTitleFormat(new MessageFormat("{0}"));
         wiz.setTitle("...dialog title...");
 
+        this.initialProgressBar();
+
         if (DialogDisplayer.getDefault().notify(wiz) == WizardDescriptor.FINISH_OPTION) {
             // JOptionPane.showMessageDialog(null, sourcePath + " - " + destinationPath + destinationFileName + destinationFileExtention, "Result", JOptionPane.INFORMATION_MESSAGE);
 //            Path source = (Path) FileSystems.getDefault().getPath(sourcePath);
@@ -116,43 +114,10 @@ public final class DataAcquisitionAction implements ActionListener {
         }
     }
 
-    public String getMountedDriveList() {
-        String results = null;
-        try {
-            System.out.println("Run...");
-            // Create the proccess in JAVA
-            Process proc = Runtime.getRuntime().exec("dd/dd --list");
-
-            // Receive outputs from another program inside Java by a stream
-            InputStream ips = proc.getInputStream();
-            BufferedReader is = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-
-            System.out.println("Start...");
-            // Using the stream to get the messages from another program
-            String output = "";
-            output += is.readLine();
-            System.out.println("Output " + ips.toString());
-            
-            //Inputs messages into another program
-//            OutputStream ops = proc.getOutputStream();
-//            ops.write(in); // "an byte array"
-
-            results = output;
-            System.out.println("End 1");
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-            System.out.println("End 2");
-        }
-        
-        System.out.println("End 3");
-        
-        return results;
-    }
-
     public void runProcess(String a, String b, String c, String d) {
         try {
-            this.initialProgressBar();
-            jFrame.setVisible(true);
+//            this.jProgressBarFrame.setVisible(true);
+            DataAcquisitionAction.jFrame.setVisible(true);
 
             System.out.println("Start the process.");
             System.out.println("Initiate state...");
@@ -164,7 +129,7 @@ public final class DataAcquisitionAction implements ActionListener {
             String ddFile           = "dd.exe";
             String ddSubCommand1    = "if=\\\\.\\" + a.replace("\\", "");
             String ddSubCommand2    = "of=\\\\.\\" + b + c + d;
-            String ddCommand[]   = new String[]{ddPath + ddFile, ddSubCommand1, ddSubCommand2};
+            String ddCommand[]   = new String[]{ddPath + ddFile, ddSubCommand1, ddSubCommand2, "bs=1M", "--size", "--progress"};
             System.out.println("Command: " + ddPath + ddFile + " " + ddSubCommand1 + " " + ddSubCommand2);
 
             // Create the proccess in JAVA
@@ -175,24 +140,24 @@ public final class DataAcquisitionAction implements ActionListener {
             // Using the stream to get the messages from another program
 
             // Receive outputs from another program inside Java by a stream
-            InputStream is = p.getInputStream();
-            int in = -1;
-            while ((in = is.read()) != -1) {
-                System.out.print((char) in);
+            InputStream inputStream = p.getInputStream();
+            int inputState = -1;
+            while ((inputState = inputStream.read()) != -1) {
+                System.out.print((char) inputState);
             }
 
             // Receive outputs from another program inside Java by a stream
-            is = p.getErrorStream();
-            in = -1;
-            while ((in = is.read()) != -1) {
-                System.out.print((char) in);
+            InputStream errorStream = p.getErrorStream();
+            int errorState = -1;
+            while ((errorState = errorStream.read()) != -1) {
+                System.out.print((char) errorState);
             }
-            p.destroy();
+            //p.destroy();
             
-            jFrame.setVisible(false);
+            DataAcquisitionAction.jFrame.setVisible(false);
             System.out.println("Finish the command.");
         } catch (Exception e) {
-            jFrame.setVisible(false);
+            DataAcquisitionAction.jFrame.setVisible(false);
             JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             System.err.println(e.getMessage());
             System.out.println("Stop the command with error.");
@@ -200,39 +165,21 @@ public final class DataAcquisitionAction implements ActionListener {
 
         System.out.println("Stop the process.");
     }
-    
-    public static Path mountOf(Path p) {
-        Path mountp = null;
-        try {
-            FileStore fs = Files.getFileStore(p);
-            Path temp = p.toAbsolutePath();
-            mountp = temp;
 
-        while( (temp = temp.getParent()) != null && fs.equals(Files.getFileStore(temp)) ) {
-            mountp = temp;
-        }
-        } catch (Exception e) {
-            
-        }
-        
-        return mountp;
-    }
-    
     private void initialProgressBar() {
-        jFrame          = new JFrame(" Progress Bar ");
-        jPanel          = new JPanel();
-        jProgressBar    = new JProgressBar(0, 1);
+        DataAcquisitionAction.jFrame          = new JFrame("Run the command...");
+        DataAcquisitionAction.jPanel          = new JPanel();
+        DataAcquisitionAction.jProgressBar    = new JProgressBar();
 
-        jProgressBar.setValue(0);
-        jProgressBar.setIndeterminate(true);
-        jPanel.setSize(300, 200);
-        jPanel.add(jProgressBar);
-        jFrame.add(jPanel);
-        jFrame.setSize(300, 200);
-        jFrame.setResizable(false);
-        jFrame.setLocationRelativeTo(null);
-        jFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        jFrame.setUndecorated(true);
+        DataAcquisitionAction.jProgressBar.setValue(0);
+        DataAcquisitionAction.jProgressBar.setIndeterminate(true);
+        DataAcquisitionAction.jPanel.setSize(500, 500);
+        DataAcquisitionAction.jPanel.add(DataAcquisitionAction.jProgressBar);
+        DataAcquisitionAction.jFrame.add(DataAcquisitionAction.jPanel);
+        DataAcquisitionAction.jFrame.setSize(500, 500);
+        DataAcquisitionAction.jFrame.setResizable(false);
+        DataAcquisitionAction.jFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        DataAcquisitionAction.jFrame.setUndecorated(true);
     }
 
 }

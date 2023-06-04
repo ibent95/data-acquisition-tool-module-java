@@ -25,8 +25,8 @@ public final class DataAcquisitionVisualPanel1 extends JPanel {
      */
     public DataAcquisitionVisualPanel1() {
         initComponents();
-        this.initialProgressBar();
-        jFrame.setVisible(true);
+//        this.initialProgressBar();
+//        jFrame.setVisible(true);
     }
     
     private void initialProgressBar() {
@@ -121,6 +121,8 @@ public final class DataAcquisitionVisualPanel1 extends JPanel {
         } else {
             JOptionPane.showMessageDialog(null, "Konfirmasi", "Lokasi sumber belum dipilih.", JOptionPane.INFORMATION_MESSAGE);
         }
+        
+        // DataAcquisitionAction.jProgressBarFrame.setVisible(true);
     }//GEN-LAST:event_sourceChooserBtnActionPerformed
 
     private void sourceChooserTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sourceChooserTxtActionPerformed
