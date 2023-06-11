@@ -4,6 +4,8 @@
  */
 package com.data.acquisition.progressBar;
 
+import javax.swing.WindowConstants;
+
 /**
  *
  * @author ibent95
@@ -26,28 +28,41 @@ public class ProgressBarFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        jProgressBarPanel = new javax.swing.JPanel();
         jProgressBarCommand = new javax.swing.JProgressBar();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle(org.openide.util.NbBundle.getMessage(ProgressBarFrame.class, "ProgressBarFrame.title")); // NOI18N
+        setResizable(false);
+        setSize(new java.awt.Dimension(319, 30));
+        setType(java.awt.Window.Type.POPUP);
 
-        jProgressBarCommand.setFocusable(false);
+        jProgressBarPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+
+        jProgressBarCommand.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        jProgressBarCommand.setDoubleBuffered(true);
+        jProgressBarCommand.setFocusCycleRoot(true);
+        jProgressBarCommand.setFocusTraversalPolicyProvider(true);
         jProgressBarCommand.setIndeterminate(true);
+        jProgressBarCommand.setInheritsPopupMenu(true);
+        jProgressBarCommand.setOpaque(true);
+        jProgressBarCommand.setString(org.openide.util.NbBundle.getMessage(ProgressBarFrame.class, "ProgressBarFrame.jProgressBarCommand.string")); // NOI18N
+        jProgressBarCommand.setStringPainted(true);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout jProgressBarPanelLayout = new javax.swing.GroupLayout(jProgressBarPanel);
+        jProgressBarPanel.setLayout(jProgressBarPanelLayout);
+        jProgressBarPanelLayout.setHorizontalGroup(
+            jProgressBarPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jProgressBarPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jProgressBarCommand, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
+                .addComponent(jProgressBarCommand, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        jProgressBarPanelLayout.setVerticalGroup(
+            jProgressBarPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jProgressBarPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jProgressBarCommand, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jProgressBarCommand, javax.swing.GroupLayout.DEFAULT_SIZE, 18, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -55,13 +70,13 @@ public class ProgressBarFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jProgressBarPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0))
+            .addComponent(jProgressBarPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -97,13 +112,15 @@ public class ProgressBarFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ProgressBarFrame().setVisible(true);
+                ProgressBarFrame frame = new ProgressBarFrame();
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JProgressBar jProgressBarCommand;
+    public javax.swing.JPanel jProgressBarPanel;
     // End of variables declaration//GEN-END:variables
 }
