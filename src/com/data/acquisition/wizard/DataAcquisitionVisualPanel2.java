@@ -97,6 +97,8 @@ public final class DataAcquisitionVisualPanel2 extends JPanel {
         } else {
             JOptionPane.showMessageDialog(null, "Konfirmasi", "Lokasi sumber belum dipilih.", JOptionPane.INFORMATION_MESSAGE);
         }
+
+        // DataAcquisitionAction.jProgressBarFrame.setVisible(false);
     }//GEN-LAST:event_destinationChooserBtnActionPerformed
 
     private void destinationChooserTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_destinationChooserTxtActionPerformed
